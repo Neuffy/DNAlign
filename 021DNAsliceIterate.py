@@ -1,49 +1,102 @@
-#Take input sequence (in base-2 binary or in ATCG?), cut into random sequences of X length.and
+#Take input sequence, cut into random sequences of X length.
 #Iterate: Do X times
+#Using preset base sequence instead of randomly generated one so as to be able to compare slices from multiple iterations.
+
+#Convention: dnaXSeq = ternary, dnaXNuc = nucleotides, baseline assumption = ternary.
+#Add handling for if is ternary or nucleotides.
+
 
 import random
 
 nucDict = {
-    "00": "A",
-    "01": "T",
-    "10": "C",
-    "11": "G"
+    "0": "A",
+    "1": "T",
+    "2": "C",
+    "3": "G"
 }
 
 def convDNA(y):
-    my_str = str(y)
-    my_list = [int(x) for x in my_str]
-    l = 2
-    my_duolist = [my_str[i:i+l] for i in range(0, len(my_str), l)]
-    my_nuclist = [nucDict[my_duolist] for my_duolist in my_duolist]
-    
-    return(my_nuclist)
+    list = [y[i:i+1] for i in range(0, len(y))]
+    nuclist = [nucDict[list] for list in list]
+ 
+    return(''.join(nuclist))
 
-#grab random set of 25 bases from sequence
-#Could grab directly from base2 but that would allow for possibility of a frameshift
-def sliceDNA(y):
+#Can implement using map, list comprehension, or lambda?
+
+#map implementation - working
+def convDNAlist(y):
+    def convDNAtemp(x):
+        list = [x[i:i+1] for i in range(0, len(x))]
+        nuclist = [nucDict[list] for list in list]
+ 
+        return(''.join(nuclist))
+
+    xSeq = list(map(convDNAtemp, y))
+
+    return(xSeq)
+
+#lambda impementation - working
+def convDNAlistLambda(y):
+    xSeq = []
+    for z in y:
+        def convDNAtemp(x):
+            list = [x[i:i+1] for i in range(0, len(x))]
+            nuclist = [nucDict[list] for list in list]
+ 
+            return(''.join(nuclist)) 
+        xSeq.append(convDNAtemp(z))
+
+    return(xSeq)
+
+#list comprehension - working
+def convDNAlistlc(y):
+    def convDNAtemp(x):
+        list = [x[i:i+1] for i in range(0, len(x))]
+        nuclist = [nucDict[list] for list in list]
+ 
+        return(''.join(nuclist))
+
+    xSeq = [convDNAtemp(y) for y in y]
+
+    return(xSeq)
+
+def randDNA(p):
+    dnaTemp = ""
+    for i in range(p):
+        temp = str(random.randint(0, 3))
+        dnaTemp += temp
+
+    return(dnaTemp)
+
+def sliceDNA25(y):
     my_str = str(y)
-    my_list = [int(x) for x in my_str]
-    l = 2
-    basel = 25
-    #
+    basel = 25 #number of bases to grab for slice
     randStart = random.randint(0, (len(my_str) // 2))
-    my_duolist = [my_str[i:i+l] for i in range(0, len(my_str), l)]
-    #my_sliced_duolist = [my_duolist[i:i+1] for i in range((random.randint(0, (len(my_str) // 2 - 25))), (len(my_str) // 2))]
-    #Random value taken for start point, then range until basel/25 later
-    my_sliced_duolist = [my_duolist[i:i+1] for i in range(randStart, randStart + basel)]
-    dna_slicedseq = my_sliced_duolist
+    my_list = [my_str[i:i+1] for i in range(0, len(my_str))]
+    dnaSliceSeq = [my_list[i] for i in range(randStart, randStart + basel)]
 
-    return(dna_slicedseq)
+    return(''.join(dnaSliceSeq)) #return(dnaSliceSeq) for a list
+
+
 
 #150 bp sequence, issue with leading 0s "SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers"
-dnaBin = 110101110000100111110100100111110101101101110100001111100011110110101111001110010000000000110100010001111010110001000011110011110111000000110100001001101110110110111010011001111101110011011110101101000110101101000111100101101110110111010110001101100001011110111001001001010000000100011010111001000011
+dnaSeq = '103021302212310123102231322112221323123310232002211332213012211231121112223210101103033200012301011013232013221120010022111031320030100000001321023023'
 
+dnaNuc = convDNA(dnaSeq)
+#dnaSeq_sliced = sliceDNA25(dnaSeq)
+#dnaNuc_sliced = convDNA(dnaSeq_sliced) 
 
-dna_nuc = convDNA(dnaBin)
-dna_sliced = sliceDNA(dnaBin)
-#dna_sliced_nuc = convDNA(dna_sliced) 
+print("Original sequence of 150 bases is:", dnaSeq, "or in nucleotides:", ''.join(dnaNuc))
+#print("Sliced sequence is:", dnaSeq_sliced, "or in nucleotides:", ''.join(dnaNuc_sliced))
 
-print("Original sequence is:", dnaBin, "or in nucleotides:", ''.join(dna_nuc))
-print("Sliced sequence is:", dna_sliced)
-#print("Sliced sequence is:", dna_sliced, "or in nucleotides:", ''.join(dna_sliced_nuc))
+print("How many random 25 base slices should we generate?")
+
+#n = int(input())
+#commenting out and adding below time to avoid needing input
+n = 5
+
+dnaSeqSlices = [sliceDNA25(dnaSeq) for i in range(n)] 
+print("Slices are: ", dnaSeqSlices)
+
+dnaNucSlices = convDNAlistlc(dnaSeqSlices) #convDNA canot ingest lists. Create function that can?
+print(dnaNucSlices)
