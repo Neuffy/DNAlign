@@ -3,69 +3,57 @@
 import random
 
 nucDict = {
-    "00": "A",
-    "01": "T",
-    "10": "C",
-    "11": "G"
+    "0": "A",
+    "1": "T",
+    "2": "C",
+    "3": "G"
 }
 
-#Cannot ingest a list?
 def convDNA(y):
-    my_str = str(y)
-    my_list = [int(x) for x in my_str]
-    l = 2
-    my_duolist = [my_str[i:i+l] for i in range(0, len(my_str), l)]
-    my_nuclist = [nucDict[my_duolist] for my_duolist in my_duolist]
-    print("Duolist is:", my_duolist)    
-    return(my_nuclist)
+    list = [y[i:i+1] for i in range(0, len(y))]
+    nuclist = [nucDict[list] for list in list]
+    return(nuclist)
+
+def randDNA(p):
+    dnaTemp = ""
+    for i in range(p):
+        temp = str(random.randint(0, 3))
+        dnaTemp += temp
+
+    return(dnaTemp)
 
 #grab random set of 25 bases from sequence
-#Could grab directly from base2 but that would allow for possibility of a frameshift
-def sliceDNA(y):
-    my_str = str(y)
-    my_list = [int(x) for x in my_str]
-    l = 2
-    basel = 25
+#def sliceDNA(y):
+    #my_str = str(y)
+    #my_list = [int(x) for x in my_str]
+    #l = 2
+    #basel = 25
     #
+    #randStart = random.randint(0, (len(my_str) // 2))
+    #my_duolist = [my_str[i:i+l] for i in range(0, len(my_str), l)]
+
+    #my_sliced_duolist = [my_duolist[i] for i in range(randStart, randStart + basel)]
+    #dna_slicedseq = my_sliced_duolist
+
+    #return(dna_slicedseq)
+
+#Convention: dnaXSeq = ternary, dnaXNuc = nucleotides.
+def sliceDNA25(y):
+    my_str = str(y)
+    basel = 25 #number of bases to grab for slice
     randStart = random.randint(0, (len(my_str) // 2))
-    my_duolist = [my_str[i:i+l] for i in range(0, len(my_str), l)]
-    #my_sliced_duolist = [my_duolist[i:i+1] for i in range((random.randint(0, (len(my_str) // 2 - 25))), (len(my_str) // 2))]
-    #Random value taken for start point, then range until basel/25 later
-    #my_sliced_duolist = [my_duolist[i:i+1] for i in range(randStart, randStart + basel)]
-    #Problem was [i:i+1] - This produces a nested list.
-    # [i] grabs one thing an does not make it a list. // Square brackets selects the item at the index
-    # [i:i] produces a set of empty nested lists.
-    # [i:i+1] grabs one thing and makes it a list.
-    # [i:i+2] grabs two things and makes it a list.
-    
-    #s[i:j] = t --> slice of s from i to j is replaced by the contents of the iterable t
-    #s.append(x) --> appends x to the end of the sequence (same as s[len(s):len(s)] = [x])
-    #s.insert(i, x) --> inserts x into s at the index given by i (same as s[i:i] = [x])
-    #s[i:i] = [x] behaves like insert and s[len(s):len(s)] = [x] behaves like append.
-    
-    #Let's examine s[i:j] = [t],
+    my_list = [my_str[i:i+1] for i in range(0, len(my_str))]
+    dnaSliceSeq = [my_list[i] for i in range(randStart, randStart + basel)]
+    return(''.join(dnaSliceSeq)) #return(dnaSliceSeq) for a list
 
-    #1. If i == j, then it will behave like insert and inserts t's content to s in index j
+dnaSeq = randDNA(150)
+dnaNuc = convDNA(dnaSeq)
+dnaSeq_sliced = sliceDNA25(dnaSeq)
+dnaNuc_sliced = convDNA(dnaSeq_sliced) #doesn't work because can't take list as input?
 
-    #2. If i == j == len(s), then it will behave like append and appends t's content to s.
+print("Original sequence is:", dnaSeq, "or in nucleotides:", ''.join(dnaNuc))
 
-    #3. If i != j then slice of s from i to j is replaced by the contents of the iterable t.
+print("Sliced sequence is:", dnaSeq_sliced, "or in nucleotides:", ''.join(dnaNuc_sliced))
 
-
-    my_sliced_duolist = [my_duolist[i] for i in range(randStart, randStart + basel)]
-    dna_slicedseq = my_sliced_duolist
-
-    return(dna_slicedseq)
-
-#150 bp sequence, issue with leading 0s "SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers"
-dnaBin = 110101110000100111110100100111110101101101110100001111100011110110101111001110010000000000110100010001111010110001000011110011110111000000110100001001101110110110111010011001111101110011011110101101000110101101000111100101101110110111010110001101100001011110111001001001010000000100011010111001000011
-
-
-dna_nuc = convDNA(dnaBin)
-dna_sliced = sliceDNA(dnaBin)
-dna_sliced_nuc = convDNA(dna_sliced) 
-
-print("Original sequence is:", dnaBin, "or in nucleotides:", ''.join(dna_nuc))
-
-print("Sliced sequence is:", dna_sliced)
-print("Sliced sequence is:", dna_sliced, "or in nucleotides:", ''.join(dna_sliced_nuc))
+#should everything be lists, or nothing? Some standard might be good.
+#NOLISTS
