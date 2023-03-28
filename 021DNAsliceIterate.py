@@ -53,7 +53,7 @@ def randDNA(p):
 def sliceDNA25(y):
     basel = 25 #number of bases to grab for slice
     randStart = random.randint(0, (len(y)))
-    lst = [y[i:i+1] for i in range(0, len(y))]
+    lst = [c for c in y]
     if basel + randStart >= len(y):
         basel = (len(y) - randStart)
     dnaSliceSeq = [lst[i] for i in range(randStart, randStart + basel)]
