@@ -51,13 +51,14 @@ def randDNA(p):
     return(dnaTemp)
 
 def sliceDNA25(y):
-    my_str = str(y)
     basel = 25 #number of bases to grab for slice
-    randStart = random.randint(0, (len(my_str) // 2))
-    my_list = [my_str[i:i+1] for i in range(0, len(my_str))]
-    dnaSliceSeq = [my_list[i] for i in range(randStart, randStart + basel)]
+    randStart = random.randint(0, (len(y)))
+    lst = [y[i:i+1] for i in range(0, len(y))]
+    if basel + randStart >= len(y):
+        basel = (len(y) - randStart)
+    dnaSliceSeq = [lst[i] for i in range(randStart, randStart + basel)]
 
-    return(''.join(dnaSliceSeq)) #return(dnaSliceSeq) for a list
+    return(''.join(dnaSliceSeq))
 
 
 
