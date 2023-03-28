@@ -16,22 +16,15 @@ nucDict = {
 }
 
 def convDNA(y):
-    list = [y[i:i+1] for i in range(0, len(y))]
-    nuclist = [nucDict[list] for list in list]
+    nuclist = [nucDict[c] for c in y]
  
     return(''.join(nuclist))
 
 #Can implement using map, list comprehension, or lambda?
 
 #map implementation - working
-def convDNAlist(y):
-    def convDNAtemp(x):
-        list = [x[i:i+1] for i in range(0, len(x))]
-        nuclist = [nucDict[list] for list in list]
- 
-        return(''.join(nuclist))
-
-    xSeq = list(map(convDNAtemp, y))
+def convDNAlistMap(y):
+    xSeq = list(map(convDNA, y))
 
     return(xSeq)
 
@@ -39,24 +32,13 @@ def convDNAlist(y):
 def convDNAlistLambda(y):
     xSeq = []
     for z in y:
-        def convDNAtemp(x):
-            list = [x[i:i+1] for i in range(0, len(x))]
-            nuclist = [nucDict[list] for list in list]
- 
-            return(''.join(nuclist)) 
-        xSeq.append(convDNAtemp(z))
+        xSeq.append(convDNA(z))
 
     return(xSeq)
 
-#list comprehension - working
+#list comprehension - working   
 def convDNAlistlc(y):
-    def convDNAtemp(x):
-        list = [x[i:i+1] for i in range(0, len(x))]
-        nuclist = [nucDict[list] for list in list]
- 
-        return(''.join(nuclist))
-
-    xSeq = [convDNAtemp(y) for y in y]
+    xSeq = [convDNA(y) for y in y]
 
     return(xSeq)
 
@@ -98,5 +80,5 @@ n = 5
 dnaSeqSlices = [sliceDNA25(dnaSeq) for i in range(n)] 
 print("Slices are: ", dnaSeqSlices)
 
-dnaNucSlices = convDNAlistlc(dnaSeqSlices) #convDNA canot ingest lists. Create function that can?
+dnaNucSlices = convDNAlistLambda(dnaSeqSlices) #convDNA canot ingest lists. Create function that can?
 print(dnaNucSlices)

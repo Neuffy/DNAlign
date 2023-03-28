@@ -9,10 +9,12 @@ nucDict = {
     "3": "G"
 }
 
+#outputs a converted list, not the string that it should.
 def convDNA(y):
     list = [y[i:i+1] for i in range(0, len(y))]
     nuclist = [nucDict[list] for list in list]
-    return(nuclist)
+  
+    return(''.join(nuclist))
 
 def randDNA(p):
     dnaTemp = ""
@@ -44,16 +46,17 @@ def sliceDNA25(y):
     randStart = random.randint(0, (len(my_str) // 2))
     my_list = [my_str[i:i+1] for i in range(0, len(my_str))]
     dnaSliceSeq = [my_list[i] for i in range(randStart, randStart + basel)]
+  
     return(''.join(dnaSliceSeq)) #return(dnaSliceSeq) for a list
 
 dnaSeq = randDNA(150)
 dnaNuc = convDNA(dnaSeq)
 dnaSeq_sliced = sliceDNA25(dnaSeq)
-dnaNuc_sliced = convDNA(dnaSeq_sliced) #doesn't work because can't take list as input?
+dnaNuc_sliced = convDNA(dnaSeq_sliced) #doesn't work if input is a list?
 
-print("Original sequence is:", dnaSeq, "or in nucleotides:", ''.join(dnaNuc))
+print("Original sequence is:", dnaSeq, "or in nucleotides:", dnaNuc)
 
-print("Sliced sequence is:", dnaSeq_sliced, "or in nucleotides:", ''.join(dnaNuc_sliced))
+print("Sliced sequence is:", dnaSeq_sliced, "or in nucleotides:", dnaNuc_sliced)
 
 #should everything be lists, or nothing? Some standard might be good.
 #NOLISTS
